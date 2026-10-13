@@ -1,0 +1,32 @@
+# Runs the portal with PostgreSQL, as described in Section 6.1 of the report.
+#   docker compose up --build      then open http://localhost:8000
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: portal
+      POSTGRES_PASSWORD: portal
+      POSTGRES_DB: portal
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U portal"]
+      interval: 3s
+      retries: 20
+
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    environment:
+      DATABASE_URL: postgresql+psycopg://portal:portal@db:5432/portal
+      SECRET_KEY: change-this-before-real-use
+    volumes:
+      - uploads:/data/uploads
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:
+  uploads:

@@ -1,0 +1,7 @@
+**/node_modules
+frontend/dist
+**/__pycache__
+**/*.db
+backend/uploads
+.venv
+docs

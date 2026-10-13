@@ -1,0 +1,15 @@
+# Render blueprint: free web service built from the Dockerfile.
+# Free plan notes: it sleeps after 15 idle minutes, and the SQLite data resets on each restart
+# (demo accounts are re-seeded automatically).
+services:
+  - type: web
+    name: dept-smart-portal
+    runtime: docker
+    plan: free
+    healthCheckPath: /api/health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      # Must match the site's address for Touch ID chat unlock. Change it if Render gives a different name.
+      - key: WEBAUTHN_ORIGINS
+        value: https://dept-smart-portal.onrender.com
